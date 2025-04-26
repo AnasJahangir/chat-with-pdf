@@ -5,7 +5,11 @@ import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker?url";
 
 GlobalWorkerOptions.workerSrc = pdfWorker;
-
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center mt-4">
+    <div className="w-6 h-6 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 function App() {
   const [pdfText, setPdfText] = useState("");
   const [chatLog, setChatLog] = useState([]);
@@ -29,6 +33,12 @@ function App() {
       };
       fileReader.readAsArrayBuffer(file);
     }
+  };
+  const getTimestamp = () => {
+    const now = new Date();
+    return `${now.getHours()}:${
+      now.getMinutes() < 10 ? "0" : ""
+    }${now.getMinutes()}`;
   };
 
   const handleSendMessage = async (userMessage) => {
@@ -159,7 +169,10 @@ function App() {
                       : "bg-gray-700 text-gray-200 self-start animate-bounce-in-left"
                   }`}
                 >
-                  {chat.message}
+                  <div>{chat.message}</div>
+                  <div className={`${ chat.type === "user"?"text-gray-100":"text-gray-500"} text-xs mt-1`}>
+                    {getTimestamp()}
+                  </div>
                 </div>
               ))}
             </div>
